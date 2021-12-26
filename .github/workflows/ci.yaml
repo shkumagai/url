@@ -27,4 +27,4 @@ jobs:
           toolchain: stable
           components: clippy, rustfmt
       - run: cargo fmt -- --color always --check
-      - run: cargo clippy --color always --all -- -D warnings
+      - run: cargo clippy --color always --all

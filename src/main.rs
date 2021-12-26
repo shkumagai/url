@@ -1,10 +1,9 @@
 use atty::Stream;
 use failure::Error;
 use log::*;
-use pretty_env_logger;
-use urlencoding::decode;
-use structopt::StructOpt;
 use std::io::{self, Read};
+use structopt::StructOpt;
+use urlencoding::decode;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -20,7 +19,7 @@ fn is_stdin(input: Option<&String>) -> bool {
         _ => false,
     };
 
-    let is_pipe = ! atty::is(Stream::Stdin);
+    let is_pipe = !atty::is(Stream::Stdin);
     is_request || is_pipe
 }
 
@@ -38,14 +37,14 @@ fn main() -> Result<()> {
     let opt = Opt::from_args();
     debug!("opt: {:?}", opt);
 
-    if opt.input.is_none() && ! is_stdin(opt.input.as_ref()) {
+    if opt.input.is_none() && !is_stdin(opt.input.as_ref()) {
         Opt::clap().print_help()?;
         std::process::exit(1);
     }
 
     let input = match opt.input {
         Some(i) => i,
-        None => read_from_stdin()?
+        None => read_from_stdin()?,
     };
     if input.is_empty() {
         Opt::clap().get_matches().usage();
@@ -54,12 +53,10 @@ fn main() -> Result<()> {
     Ok(println!("{}", percent_decode(&input)?))
 }
 
-
 fn percent_decode(input: &str) -> Result<String> {
     let decoded = decode(input)?;
     Ok(decoded.to_string())
 }
-
 
 #[cfg(test)]
 mod tests {
